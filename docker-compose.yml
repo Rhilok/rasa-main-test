@@ -24,7 +24,7 @@ action_server:
 
    volumes:
 
-     – ./actions:/var/www/actions
+     – ./actions:/app/actions
 
    ports:
 
