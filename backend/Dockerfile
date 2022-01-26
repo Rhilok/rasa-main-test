@@ -1,11 +1,15 @@
 FROM rasa/rasa
-USER root
-ENV BOT_ENV=production
-COPY . /var/www
-WORKDIR /var/www
-RUN python3 -m venv env
-RUN source ./env/bin/activate 
-RUN pip install --upgrade pip 
-RUN pip install rasa==2.8.1 
+
+WORKDIR /app
+COPY . /app/
+COPY ./data /app/data
+COPY ./ssl /app/ssl
+
 RUN rasa train
-ENTRYPOINT [ "rasa", "run", "--enable-api","--cors","'*'","-p", "8080" ]
+
+VOLUME /app
+VOLUME /app/data
+VOLUME /app/models
+VOLUME /app/ssl
+
+CMD [ "rasa", "run","-m","/app/models" ,"--enable-api","--cors","'*'","--debug"]
